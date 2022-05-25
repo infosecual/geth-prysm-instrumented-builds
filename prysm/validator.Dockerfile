@@ -5,7 +5,7 @@ FROM golang:buster as builder
 ARG DOCKER_TAG
 
 # prysm release branch
-ARG BUILD_TARGET="v2.1.2"
+ARG BUILD_TARGET="v2.1.3-rc.0"
 
 # get depends
 RUN apt-get update && apt-get install -y cmake libtinfo5 libgmp-dev clang
@@ -33,17 +33,6 @@ FROM debian:bullseye-slim
 # need this for the llvm-symbolizer
 RUN apt-get update && apt-get install -y --no-install-recommends llvm libasan5
  
-# copy all bc binaries
-COPY --from=builder /go/src/prysm/instrumented_builds/regular/beacon-chain /usr/local/bin/beacon-chain
-# to run this you need to specify a log file, eg.:
-# 'GORACE="log_path=./prysm_bc_race_log" beacon-chain-race ...'
-COPY --from=builder /go/src/prysm/instrumented_builds/race/beacon-chain /usr/local/bin/beacon-chain-race
-# to get source lines you need to run these w symbolizer path env vars specified:
-# 'ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer beacon-chain-asan ...'
-COPY --from=builder /go/src/prysm/instrumented_builds/asan/beacon-chain /usr/local/bin/beacon-chain-asan
-# 'MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer beacon-chain-msan ...'
-COPY --from=builder /go/src/prysm/instrumented_builds/msan/beacon-chain /usr/local/bin/beacon-chain-msan
-
 # copy all validator bins
 COPY --from=builder /go/src/prysm/instrumented_builds/regular/validator /usr/local/bin/validator
 # 'GORACE="log_path=./prysm_vc_race_log" validator-race ...'
@@ -53,7 +42,12 @@ COPY --from=builder /go/src/prysm/instrumented_builds/asan/validator /usr/local/
 # 'MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer validator-msan ...'
 COPY --from=builder /go/src/prysm/instrumented_builds/msan/validator /usr/local/bin/validator-msan
 
-ENTRYPOINT [""]
+ENV ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
+ENV MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
+ENV GORACE="log_path=/home/devops/prysm_vc_race_log"
+
+# this will make prysm_race the entrypoint
+ENTRYPOINT ["/usr/local/bin/validator-race"]
 
 
 
