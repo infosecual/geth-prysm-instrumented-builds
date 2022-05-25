@@ -31,7 +31,7 @@ RUN bash -c "git clone https://github.com/prysmaticlabs/prysm.git && \
 FROM debian:bullseye-slim
 
 # need this for the llvm-symbolizer
-RUN apt-get update && apt-get install -y --no-install-recommends llvm
+RUN apt-get update && apt-get install -y --no-install-recommends llvm libasan5
  
 # copy all bc binaries
 COPY --from=builder /go/src/prysm/instrumented_builds/regular/beacon-chain /usr/local/bin/beacon-chain
@@ -53,7 +53,7 @@ COPY --from=builder /go/src/prysm/instrumented_builds/asan/validator /usr/local/
 # 'MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer validator-msan ...'
 COPY --from=builder /go/src/prysm/instrumented_builds/msan/validator /usr/local/bin/validator-msan
 
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT [""]
 
 
 
