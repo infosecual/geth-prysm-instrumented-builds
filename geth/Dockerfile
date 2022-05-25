@@ -49,7 +49,10 @@ COPY --from=builder /go/src/go-ethereum/instrumented_builds/geth_race /usr/local
 # geth_msan:
 #   'MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer geth_msan ...'
 
-ENTRYPOINT ["/bin/bash"]
+#ENTRYPOINT ["/bin/bash"]
 
-
-
+# this will make geth_race the entrypoint
+ENV ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
+ENV MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
+ENV GORACE="log_path=/eth1data/geth_race_log"
+ENTRYPOINT ["/usr/local/bin/geth_race"]
