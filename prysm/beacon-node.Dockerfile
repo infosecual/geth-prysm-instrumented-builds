@@ -46,10 +46,11 @@ COPY --from=builder /go/src/prysm/instrumented_builds/msan/beacon-chain /usr/loc
 
 ENV ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
 ENV MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
-ENV GORACE="log_path=/home/devops/prysm_bn_race_log"
+ENV GORACE="log_path=/beacondata/prysm_bn_race_log"
 
 # this will make prysm_race the entrypoint
 ENTRYPOINT ["/usr/local/bin/beacon-chain-race"]
+#ENTRYPOINT ["/bin/bash/"]
 
 
 

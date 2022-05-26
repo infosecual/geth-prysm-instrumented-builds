@@ -44,10 +44,11 @@ COPY --from=builder /go/src/prysm/instrumented_builds/msan/validator /usr/local/
 
 ENV ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
 ENV MSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
-ENV GORACE="log_path=/home/devops/prysm_vc_race_log"
+ENV GORACE="log_path=/validatordata/prysm_vc_race_log"
 
 # this will make prysm_race the entrypoint
 ENTRYPOINT ["/usr/local/bin/validator-race"]
+#ENTRYPOINT ["/bin/bash"]
 
 
 
