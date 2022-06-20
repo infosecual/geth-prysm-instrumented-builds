@@ -1,0 +1,6 @@
+docker image tag instrumented-prysm-vc infosecual/instrumented-prysm-vc
+docker image tag instrumented-prysm-bn infosecual/instrumented-prysm-bn
+docker image tag instrumented-geth infosecual/instrumented-geth
+docker push infosecual/instrumented-prysm-bn
+docker push infosecual/instrumented-prysm-vc
+docker push infosecual/instrumented-geth
