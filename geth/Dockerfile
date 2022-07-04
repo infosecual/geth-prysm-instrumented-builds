@@ -5,7 +5,7 @@ FROM golang:buster as builder
 ARG DOCKER_TAG
 
 # geth release branch
-ARG BUILD_TARGET="v1.10.18-instrumentation"
+ARG BUILD_TARGET="master"
 
 # get depends
 RUN apt-get update && apt-get install -y cmake libtinfo5 libgmp-dev clang
@@ -16,7 +16,7 @@ WORKDIR /go/src
 RUN bash -c "git clone https://github.com/infosecual/go-ethereum.git && \
              cd go-ethereum && \
              git checkout ${BUILD_TARGET} && \
-             go get -t -f ./... && \
+             go get -t -d ./... && \
              mkdir instrumented_builds && \
              make geth && \
              cp ./build/bin/geth ./instrumented_builds/geth && \
