@@ -5,10 +5,14 @@ FROM golang:buster as builder
 ARG DOCKER_TAG
 
 # prysm release branch
-ARG BUILD_TARGET="v2.1.4"
+ARG BUILD_TARGET="v3.0.0"
 
 # get depends
 RUN apt-get update && apt-get install -y cmake libtinfo5 libgmp-dev clang
+
+# download go 1.18 for prysm build
+RUN go install golang.org/dl/go1.18.5@latest
+RUN go1.18.5 download
 
 WORKDIR /go/src
 
@@ -22,10 +26,10 @@ RUN bash -c "git clone https://github.com/prysmaticlabs/prysm.git && \
              mkdir -p instrumented_builds/race && \
              mkdir -p instrumented_builds/asan && \
              mkdir -p instrumented_builds/regular && \
-             go build -o instrumented_builds/regular ./... && \
-             go build -race -o instrumented_builds/race ./... && \
-             go build -asan -o instrumented_builds/asan ./... && \
-             CC=clang go build -msan -o instrumented_builds/msan ./..."
+             go1.18.5 build -o instrumented_builds/regular ./... && \
+             go1.18.5 build -race -o instrumented_builds/race ./... && \
+             go1.18.5 build -asan -o instrumented_builds/asan ./... && \
+             CC=clang go1.18.5 build -msan -o instrumented_builds/msan ./..."
 
 # default debian env to pull everything into
 FROM debian:bullseye-slim
