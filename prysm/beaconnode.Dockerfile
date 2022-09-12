@@ -5,7 +5,7 @@ FROM golang:buster as builder
 ARG DOCKER_TAG
 
 # prysm release branch
-ARG BUILD_TARGET="v3.0.0"
+ARG BUILD_TARGET="v3.1.1"
 
 # get depends
 RUN apt-get update && apt-get install -y cmake libtinfo5 libgmp-dev clang
