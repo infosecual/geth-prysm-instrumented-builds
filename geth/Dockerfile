@@ -5,7 +5,7 @@ FROM golang:buster as builder
 ARG DOCKER_TAG
 
 # geth release branch
-ARG BUILD_TARGET="v1.10.25-instrumentation"
+ARG BUILD_TARGET="1.10.26-instrumentation"
 
 # get depends
 RUN apt-get update && apt-get install -y cmake libtinfo5 libgmp-dev clang
